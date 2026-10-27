@@ -1,1 +1,68 @@
 
+# Fuzzy Set Operations in Python
+# Author: Senior Programming Expert
+
+def validate_fuzzy_set(fuzzy_set):
+    """
+    Validates that the fuzzy set is a dictionary with membership values between 0 and 1.
+    """
+    if not isinstance(fuzzy_set, dict):
+        raise ValueError("Fuzzy set must be a dictionary {element: membership_value}.")
+    for element, value in fuzzy_set.items():
+        if not isinstance(value, (int, float)) or not (0.0 <= value <= 1.0):
+            raise ValueError(f"Invalid membership value for '{element}': {value}. Must be between 0 and 1.")
+
+def fuzzy_union(set_a, set_b):
+    """
+    Union of two fuzzy sets: μA∪B(x) = max(μA(x), μB(x))
+    """
+    all_elements = set(set_a.keys()) | set(set_b.keys())
+    return {e: max(set_a.get(e, 0), set_b.get(e, 0)) for e in all_elements}
+
+def fuzzy_intersection(set_a, set_b):
+    """
+    Intersection of two fuzzy sets: μA∩B(x) = min(μA(x), μB(x))
+    """
+    all_elements = set(set_a.keys()) | set(set_b.keys())
+    return {e: min(set_a.get(e, 0), set_b.get(e, 0)) for e in all_elements}
+
+def fuzzy_complement(fuzzy_set):
+    """
+    Complement of a fuzzy set: μA'(x) = 1 - μA(x)
+    """
+    return {e: 1 - v for e, v in fuzzy_set.items()}
+
+def print_fuzzy_set(name, fuzzy_set):
+    """
+    Nicely prints a fuzzy set.
+    """
+    print(f"{name}: {{", end="")
+    print(", ".join(f"{k}: {v:.2f}" for k, v in fuzzy_set.items()), end="")
+    print(" }}")
+
+if __name__ == "__main__":
+    try:
+        # Example fuzzy sets
+        A = {"x1": 0.2, "x2": 0.7, "x3": 1.0}
+        B = {"x1": 0.5, "x2": 0.4, "x4": 0.9}
+
+        # Validate sets
+        validate_fuzzy_set(A)
+        validate_fuzzy_set(B)
+
+        # Perform operations
+        union_set = fuzzy_union(A, B)
+        intersection_set = fuzzy_intersection(A, B)
+        complement_A = fuzzy_complement(A)
+        complement_B = fuzzy_complement(B)
+
+        # Display results
+        print_fuzzy_set("Set A", A)
+        print_fuzzy_set("Set B", B)
+        print_fuzzy_set("A ∪ B", union_set)
+        print_fuzzy_set("A ∩ B", intersection_set)
+        print_fuzzy_set("A'", complement_A)
+        print_fuzzy_set("B'", complement_B)
+
+    except ValueError as e:
+        print(f"Error: {e}")
