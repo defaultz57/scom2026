@@ -10,3 +10,7 @@ print("Dataset:", data)
 print("Mean:", mean)
 print("Median:", median)
 print("Mode:", mode)
+
+
+
+
