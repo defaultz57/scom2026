@@ -1,1 +1,36 @@
+#numpy library
 
+import pandas as pd
+import numpy as np
+data=np.array(['g','e','e','k','s'])
+s=pd.Series(data)
+print("Pandas Series:")
+print(s)
+
+import pandas as pd
+df=pd.DataFrame()
+print(df)
+lst=['Geeks', 'For', 'Geeks', 'is', 'portal', 'for', 'Geeks']
+df=pd.DataFrame(lst)
+print(df)
+
+
+#Matplotlib library
+
+import matplotlib.pyplot as plt
+plt.plot([1, 2, 3, 4])
+plt.ylabel('some numbers')
+plt.show()
+
+names=['group_a', 'group_b', 'group_c']
+values=[1, 10, 100]
+plt.figure(figsize=(9,3))
+
+plt.subplot(131)
+plt.bar(names, values)
+plt.subplot(132)
+plt.scatter(names, values)
+plt.subplot(133)
+plt.plot(names, values)
+plt.suptitle('Categorical Plotting')
+plt.show()
