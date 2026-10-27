@@ -6,6 +6,7 @@ mean = statistics.mean(data)
 median = statistics.median(data)
 mode = statistics.mode(data)
 
+print("Dataset:", data)
 print("Mean:", mean)
 print("Median:", median)
 print("Mode:", mode)
