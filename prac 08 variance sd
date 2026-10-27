@@ -1,1 +1,10 @@
+import statistics
 
+data = [10, 20, 30, 40, 50]
+
+variance = statistics.pvariance(data)
+std_dev = statistics.pstdev(data)
+
+print("Dataset:", data)
+print("Variance:", variance)
+print("Standard Deviation:", std_dev)
