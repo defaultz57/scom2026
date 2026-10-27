@@ -1,1 +1,30 @@
+#math library
+
+import math 
+a=2.3
+b=5
+c=10
+print("The ceil of 2.3 is:", end=" ")
+print(math.ceil(a))
+
+print("The floor of 2.3 is:", end=" ")
+print(math.floor(a))
+
+print("The factorial of 5 is:", end=" ")
+print(math.factorial(b))
+
+print("The absolute of -10 is:", end=" ")
+print(math.fabs(a))
+
+print("The gcd of 5 and 15 is:", end=" ")
+print(math.gcd(b,c))
+
+print("The value of log 2 with base 3 is:", end=" ")
+print(math.log(2,3))
+
+print("The value of log 2 of 16 is:", end=" ")
+print(math.log2(16))
+
+print("The value of log 10 of 10000 is:", end=" ")
+print(math.log10(10000))
 
