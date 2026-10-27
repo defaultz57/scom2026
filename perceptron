@@ -1,0 +1,97 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+class Perceptron:
+    def __init__(self, learning_rate=0.01, max_epochs=1000):
+        """
+        Initialize perceptron parameters.
+        :param learning_rate: Step size for weight updates.
+        :param max_epochs: Maximum number of iterations over the dataset.
+        """
+        if learning_rate <= 0:
+            raise ValueError("Learning rate must be positive.")
+        if max_epochs <= 0:
+            raise ValueError("Max epochs must be positive.")
+
+        self.lr = learning_rate
+        self.max_epochs = max_epochs
+        self.weights = None
+        self.bias = None
+
+    def fit(self, X, y):
+        """
+        Train the perceptron on a linearly separable dataset.
+        :param X: Feature matrix (numpy array), shape (n_samples, n_features)
+        :param y: Labels (numpy array), shape (n_samples,), values must be -1 or 1
+        """
+        # Validate inputs
+        if not isinstance(X, np.ndarray) or not isinstance(y, np.ndarray):
+            raise TypeError("X and y must be numpy arrays.")
+        if X.shape[0] != y.shape[0]:
+            raise ValueError("Number of samples in X and y must match.")
+        if not np.all(np.isin(y, [-1, 1])):
+            raise ValueError("Labels must be -1 or 1 for binary classification.")
+
+        n_samples, n_features = X.shape
+        self.weights = np.zeros(n_features)
+        self.bias = 0
+
+        for epoch in range(self.max_epochs):
+            errors = 0
+            for idx, x_i in enumerate(X):
+                linear_output = np.dot(x_i, self.weights) + self.bias
+                y_pred = np.sign(linear_output) if linear_output != 0 else 0
+
+                # Update rule if misclassified
+                if y_pred != y[idx]:
+                    self.weights += self.lr * y[idx] * x_i
+                    self.bias += self.lr * y[idx]
+                    errors += 1
+
+            # Stop early if no errors (perfect classification)
+            if errors == 0:
+                print(f"Training converged after {epoch+1} epochs.")
+                break
+
+    def predict(self, X):
+        """
+        Predict labels for given input.
+        :param X: Feature matrix (numpy array)
+        :return: Predicted labels (-1 or 1)
+        """
+        if self.weights is None:
+            raise ValueError("Model has not been trained yet.")
+        linear_output = np.dot(X, self.weights) + self.bias
+        return np.where(linear_output >= 0, 1, -1)
+
+
+# --- Example usage with a linearly separable dataset ---
+if __name__ == "__main__":
+    # Generate a simple linearly separable dataset
+    np.random.seed(42)
+    X_pos = np.random.randn(50, 2) + np.array([2, 2])  # Positive class
+    X_neg = np.random.randn(50, 2) + np.array([-2, -2])  # Negative class
+    X = np.vstack((X_pos, X_neg))
+    y = np.hstack((np.ones(50), -np.ones(50)))
+
+    # Train perceptron
+    perceptron = Perceptron(learning_rate=0.1, max_epochs=1000)
+    perceptron.fit(X, y)
+
+    # Predictions
+    preds = perceptron.predict(X)
+    accuracy = np.mean(preds == y)
+    print(f"Accuracy: {accuracy * 100:.2f}%")
+
+    # Plot decision boundary
+    plt.scatter(X_pos[:, 0], X_pos[:, 1], color='blue', label='Class 1')
+    plt.scatter(X_neg[:, 0], X_neg[:, 1], color='red', label='Class -1')
+
+    # Decision boundary line
+    x_vals = np.linspace(-5, 5, 100)
+    y_vals = -(perceptron.weights[0] * x_vals + perceptron.bias) / perceptron.weights[1]
+    plt.plot(x_vals, y_vals, color='green', label='Decision Boundary')
+
+    plt.legend()
+    plt.title("Perceptron Decision Boundary")
+    plt.show()
