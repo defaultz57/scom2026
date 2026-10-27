@@ -26,7 +26,7 @@ print(df)
 df.shape
 # (10, 4)
 
-plt.bar(df["Cups Purchased (X)"], df["Total Spend in ₹ (Y)"], color="blue")
+plt.bar(df["Cups Purchased (X)"], df["Total Spent in ₹ (Y)"], color="blue")
 plt.xlabel("Number of coffee Cups")
 plt.ylabel("Amount Spent")
 plt.title("Coffee Cups vs Amount spent")
