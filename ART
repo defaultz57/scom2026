@@ -1,0 +1,83 @@
+import numpy as np
+
+class ART1:
+    def __init__(self, num_features, vigilance=0.7, L=2.0):
+        self.num_features = num_features
+        self.vigilance = vigilance
+        self.L = L
+        self.w_bu = np.ones((0, num_features))
+        self.w_td = np.ones((0, num_features))
+        
+    def _add_new_cluster(self, x):
+       
+        new_w_td = np.array([x])
+        
+        new_w_bu = np.array([ (self.L * x) / (self.L - 1 + np.sum(x)) ])
+        
+        if self.w_bu.shape[0] == 0:
+            self.w_bu = new_w_bu
+            self.w_td = new_w_td
+        else:
+            self.w_bu = np.vstack([self.w_bu, new_w_bu])
+            self.w_td = np.vstack([self.w_td, new_w_td])
+            
+        return self.w_bu.shape[0] - 1
+
+    def learn_pattern(self, x):
+       
+        x = np.asarray(x, dtype=int)
+        
+       
+        if self.w_bu.shape[0] == 0:
+            return self._add_new_cluster(x)
+        activations = np.dot(self.w_bu, x)
+        candidate_indices = np.argsort(activations)[::-1]
+        for category_idx in candidate_indices:
+            
+            match_vector = np.logical_and(x, self.w_td[category_idx]).astype(int)         
+            norm_match = np.sum(match_vector)
+            norm_input = np.sum(x)                       
+            similarity = norm_match / norm_input if norm_input > 0 else 1.0                     
+            if similarity >= self.vigilance:
+               
+                self.w_td[category_idx] = match_vector
+                self.w_bu[category_idx] = (self.L * match_vector) / (self.L - 1 + np.sum(match_vector))
+                return category_idx                       
+        return self._add_new_cluster(x)
+
+    def predict(self, x):
+       
+        x = np.asarray(x, dtype=int)
+        if self.w_bu.shape[0] == 0:
+            return -1
+            
+        activations = np.dot(self.w_bu, x)
+        candidate_indices = np.argsort(activations)[::-1]
+        
+        for category_idx in candidate_indices:
+            match_vector = np.logical_and(x, self.w_td[category_idx]).astype(int)
+            similarity = np.sum(match_vector) / np.sum(x) if np.sum(x) > 0 else 1.0
+            
+            if similarity >= self.vigilance:
+                return category_idx
+        return -1 
+if __name__ == "__main__":
+    
+    data = [
+        [1, 1, 0, 0, 0],
+        [1, 1, 1, 0, 0],  
+        [0, 0, 0, 1, 1],  
+        [1, 0, 0, 0, 0]   
+    ]
+    
+    print("--- Running ART1 with Low Vigilance (0.4) ---")
+    art_low = ART1(num_features=5, vigilance=0.4)
+    for i, pattern in enumerate(data):
+        cluster = art_low.learn_pattern(pattern)
+        print(f"Pattern {pattern} assigned to Cluster {cluster}")
+        
+    print("\n--- Running ART1 with High Vigilance (0.8) ---")
+    art_high = ART1(num_features=5, vigilance=0.8)
+    for i, pattern in enumerate(data):
+        cluster = art_high.learn_pattern(pattern)
+        print(f"Pattern {pattern} assigned to Cluster {cluster}")
