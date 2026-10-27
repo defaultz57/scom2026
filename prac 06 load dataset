@@ -1,12 +1,33 @@
 #creation of dataset
 
 import pandas as pd
-
 data={
   "User_ID": [101, 102, 103],
   "Name": ["Alice", "Bob", "Charlie"],
   "Subscribed":[True, False, True]
 }
-
 df=pd.DataFrame(data)
 print(df)
+
+
+
+
+#load the dataset
+https://www.kaggle.com/datasets/anjaliisharmaa/the-latte-factor
+
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("/content/regression-simple linear regression.csv")
+
+print("Latte Factor dataset:")
+print(df)
+
+df.shape
+# (10, 4)
+
+plt.bar(df["Cups Purchased (X)"], df["Total Spend in ₹ (Y)"], color="blue")
+plt.xlabel("Number of coffee Cups")
+plt.ylabel("Amount Spent")
+plt.title("Coffee Cups vs Amount spent")
+plt.show()
