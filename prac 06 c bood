@@ -8,3 +8,5 @@ plt.xlabel("Student")
 plt.ylabel("Marks")
 plt.title("Marks of a Student")
 plt.show()
+
+
