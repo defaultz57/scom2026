@@ -1,0 +1,10 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+df = pd.read_csv("/content/Bood25.csv")
+print(df)
+df.shape # (10, 4)
+plt.bar(df["Student"], df["marks"])
+plt.xlabel("Student")
+plt.ylabel("Marks")
+plt.title("Marks of a Student")
+plt.show()
